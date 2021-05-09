@@ -27,7 +27,7 @@ namespace PizzaBox.Client
       services.AddControllersWithViews();
       services.AddDbContext<PizzaBoxContext>(options =>
       {
-        options.UseNpgsql(Configuration.GetConnectionString("pgsql"));
+        options.UseNpgsql(Configuration["pgsql"]);
       });
       services.AddScoped<UnitOfWork>();
     }
