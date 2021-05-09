@@ -20,20 +20,21 @@ namespace PizzaBox.Storing
     public DbSet<ACrust> Crusts { get; set; }
     public DbSet<ASize> Sizes { get; set; }
     public DbSet<ATopping> Toppings { get; set; }
-    public DbSet<ToppingsList> ToppingsList { get; set; }
-    public DbSet<Pizza> Pizza { get; set; }
-    public DbSet<Order> Order { get; set; }
-    public DbSet<Customer> Customer { get; set; }
+    public DbSet<Pizza> Pizzas { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<Customer> Customers { get; set; }
 
-    public PizzaBoxContext()
-    {
-      _configuration = new ConfigurationBuilder().AddUserSecrets<PizzaBoxContext>().Build();
-    }
-    protected override void OnConfiguring(DbContextOptionsBuilder builder)
-    {
-      builder.UseNpgsql(_configuration["mssql"]);
-      builder.EnableSensitiveDataLogging(true);
-    }
+    /*     public PizzaBoxContext()
+        {
+          _configuration = new ConfigurationBuilder().AddUserSecrets<PizzaBoxContext>().Build();
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
+        {
+          builder.UseNpgsql(_configuration["mssql"]);
+          builder.EnableSensitiveDataLogging(true);
+        } */
+
+    public PizzaBoxContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -55,8 +56,6 @@ namespace PizzaBox.Storing
       builder.Entity<Small>().HasBaseType<ASize>();
       builder.Entity<Medium>().HasBaseType<ASize>();
       builder.Entity<Large>().HasBaseType<ASize>();
-
-      builder.Entity<ToppingsList>().HasKey(e => e.EntityId);
 
       builder.Entity<ATopping>().HasKey(e => e.EntityId);
       builder.Entity<Onions>().HasBaseType<ATopping>();

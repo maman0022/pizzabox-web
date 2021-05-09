@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PizzaBox.Domain.Abstracts;
+using System.Linq;
 
 namespace PizzaBox.Domain.Models
 {
@@ -8,17 +9,14 @@ namespace PizzaBox.Domain.Models
     public APizzaType Type { get; set; }
     public ACrust Crust { get; set; }
     public ASize Size { get; set; }
-    public ToppingsList ToppingsList { get; set; }
+    public List<ATopping> Toppings { get; set; }
+    public ICollection<Order> Order { get; set; }
     public decimal TotalCost
     {
       get
       {
-        return Crust.Price + Size.Price + ToppingsList.total;
+        return Crust.Price + Size.Price + Toppings.Sum(t => t.Price);
       }
-    }
-    public Pizza()
-    {
-      ToppingsList = new ToppingsList();
     }
   }
 }

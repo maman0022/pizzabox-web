@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -24,7 +24,7 @@ namespace PizzaBox.Storing.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customer",
+                name: "Customers",
                 columns: table => new
                 {
                     EntityId = table.Column<long>(type: "bigint", nullable: false)
@@ -33,7 +33,7 @@ namespace PizzaBox.Storing.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customer", x => x.EntityId);
+                    table.PrimaryKey("PK_Customers", x => x.EntityId);
                 });
 
             migrationBuilder.CreateTable(
@@ -95,38 +95,59 @@ namespace PizzaBox.Storing.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ToppingsList",
+                name: "Pizzas",
                 columns: table => new
                 {
                     EntityId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ToppingIds = table.Column<List<long>>(type: "bigint[]", nullable: true)
+                    TypeEntityId = table.Column<long>(type: "bigint", nullable: true),
+                    CrustEntityId = table.Column<long>(type: "bigint", nullable: true),
+                    SizeEntityId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ToppingsList", x => x.EntityId);
+                    table.PrimaryKey("PK_Pizzas", x => x.EntityId);
+                    table.ForeignKey(
+                        name: "FK_Pizzas_Crusts_CrustEntityId",
+                        column: x => x.CrustEntityId,
+                        principalTable: "Crusts",
+                        principalColumn: "EntityId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pizzas_PizzaTypes_TypeEntityId",
+                        column: x => x.TypeEntityId,
+                        principalTable: "PizzaTypes",
+                        principalColumn: "EntityId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Pizzas_Sizes_SizeEntityId",
+                        column: x => x.SizeEntityId,
+                        principalTable: "Sizes",
+                        principalColumn: "EntityId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Order",
+                name: "Orders",
                 columns: table => new
                 {
                     EntityId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CustomerEntityId = table.Column<long>(type: "bigint", nullable: true),
-                    StoreEntityId = table.Column<long>(type: "bigint", nullable: true)
+                    StoreEntityId = table.Column<long>(type: "bigint", nullable: true),
+                    orderTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Order", x => x.EntityId);
+                    table.PrimaryKey("PK_Orders", x => x.EntityId);
                     table.ForeignKey(
-                        name: "FK_Order_Customer_CustomerEntityId",
+                        name: "FK_Orders_Customers_CustomerEntityId",
                         column: x => x.CustomerEntityId,
-                        principalTable: "Customer",
+                        principalTable: "Customers",
                         principalColumn: "EntityId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Order_Stores_StoreEntityId",
+                        name: "FK_Orders_Stores_StoreEntityId",
                         column: x => x.StoreEntityId,
                         principalTable: "Stores",
                         principalColumn: "EntityId",
@@ -134,50 +155,51 @@ namespace PizzaBox.Storing.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pizza",
+                name: "AToppingPizza",
                 columns: table => new
                 {
-                    EntityId = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    TypeEntityId = table.Column<long>(type: "bigint", nullable: true),
-                    CrustEntityId = table.Column<long>(type: "bigint", nullable: true),
-                    SizeEntityId = table.Column<long>(type: "bigint", nullable: true),
-                    ToppingsListEntityId = table.Column<long>(type: "bigint", nullable: true),
-                    OrderEntityId = table.Column<long>(type: "bigint", nullable: true)
+                    PizzaEntityId = table.Column<long>(type: "bigint", nullable: false),
+                    ToppingsEntityId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pizza", x => x.EntityId);
+                    table.PrimaryKey("PK_AToppingPizza", x => new { x.PizzaEntityId, x.ToppingsEntityId });
                     table.ForeignKey(
-                        name: "FK_Pizza_Crusts_CrustEntityId",
-                        column: x => x.CrustEntityId,
-                        principalTable: "Crusts",
+                        name: "FK_AToppingPizza_Pizzas_PizzaEntityId",
+                        column: x => x.PizzaEntityId,
+                        principalTable: "Pizzas",
                         principalColumn: "EntityId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pizza_Order_OrderEntityId",
+                        name: "FK_AToppingPizza_Toppings_ToppingsEntityId",
+                        column: x => x.ToppingsEntityId,
+                        principalTable: "Toppings",
+                        principalColumn: "EntityId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderPizza",
+                columns: table => new
+                {
+                    OrderEntityId = table.Column<long>(type: "bigint", nullable: false),
+                    PizzasEntityId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderPizza", x => new { x.OrderEntityId, x.PizzasEntityId });
+                    table.ForeignKey(
+                        name: "FK_OrderPizza_Orders_OrderEntityId",
                         column: x => x.OrderEntityId,
-                        principalTable: "Order",
+                        principalTable: "Orders",
                         principalColumn: "EntityId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pizza_PizzaTypes_TypeEntityId",
-                        column: x => x.TypeEntityId,
-                        principalTable: "PizzaTypes",
+                        name: "FK_OrderPizza_Pizzas_PizzasEntityId",
+                        column: x => x.PizzasEntityId,
+                        principalTable: "Pizzas",
                         principalColumn: "EntityId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Pizza_Sizes_SizeEntityId",
-                        column: x => x.SizeEntityId,
-                        principalTable: "Sizes",
-                        principalColumn: "EntityId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Pizza_ToppingsList_ToppingsListEntityId",
-                        column: x => x.ToppingsListEntityId,
-                        principalTable: "ToppingsList",
-                        principalColumn: "EntityId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -231,69 +253,72 @@ namespace PizzaBox.Storing.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_CustomerEntityId",
-                table: "Order",
+                name: "IX_AToppingPizza_ToppingsEntityId",
+                table: "AToppingPizza",
+                column: "ToppingsEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderPizza_PizzasEntityId",
+                table: "OrderPizza",
+                column: "PizzasEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CustomerEntityId",
+                table: "Orders",
                 column: "CustomerEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Order_StoreEntityId",
-                table: "Order",
+                name: "IX_Orders_StoreEntityId",
+                table: "Orders",
                 column: "StoreEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pizza_CrustEntityId",
-                table: "Pizza",
+                name: "IX_Pizzas_CrustEntityId",
+                table: "Pizzas",
                 column: "CrustEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pizza_OrderEntityId",
-                table: "Pizza",
-                column: "OrderEntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pizza_SizeEntityId",
-                table: "Pizza",
+                name: "IX_Pizzas_SizeEntityId",
+                table: "Pizzas",
                 column: "SizeEntityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pizza_ToppingsListEntityId",
-                table: "Pizza",
-                column: "ToppingsListEntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Pizza_TypeEntityId",
-                table: "Pizza",
+                name: "IX_Pizzas_TypeEntityId",
+                table: "Pizzas",
                 column: "TypeEntityId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Pizza");
+                name: "AToppingPizza");
+
+            migrationBuilder.DropTable(
+                name: "OrderPizza");
 
             migrationBuilder.DropTable(
                 name: "Toppings");
 
             migrationBuilder.DropTable(
-                name: "Crusts");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Order");
+                name: "Pizzas");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "Stores");
+
+            migrationBuilder.DropTable(
+                name: "Crusts");
 
             migrationBuilder.DropTable(
                 name: "PizzaTypes");
 
             migrationBuilder.DropTable(
                 name: "Sizes");
-
-            migrationBuilder.DropTable(
-                name: "ToppingsList");
-
-            migrationBuilder.DropTable(
-                name: "Customer");
-
-            migrationBuilder.DropTable(
-                name: "Stores");
         }
     }
 }

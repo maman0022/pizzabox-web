@@ -1,0 +1,8 @@
+job: 
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - build: dotnet build
+name: ci-pipeline
+on: push

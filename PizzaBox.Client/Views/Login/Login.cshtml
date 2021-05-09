@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+@model PizzaBox.Client.Models.LoginModel
+
+<form action="">
+    @foreach (var store in Model.Stores)
+    {
+        <label for=@store.Name>@store.Name</label>
+        <input type="radio" asp-for='SelectedStore' id=@store.Name name="store" value=@store.Name>
+    }
+    <label for="name">Please Enter Your Name:</label>
+    <input type="text" id="name">
+</form>

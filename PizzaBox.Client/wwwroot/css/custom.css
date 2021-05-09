@@ -1,0 +1,27 @@
+header {
+  background-color: maroon;
+  color: #fff;
+  text-align: center;
+}
+
+header h1 {
+  padding-bottom: 0.3em;
+}
+
+* {
+  font-size: medium;
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+}
+
+legend {
+  text-decoration: underline;
+  color: darkblue;
+}
+
+fieldset {
+  border: gray, 2px, solid;
+}

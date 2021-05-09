@@ -1,0 +1,138 @@
+@{
+  ViewData["Title"] = "Place Order";
+}
+
+@model PizzaBox.Client.Models.OrderModel
+
+<section class="container-fluid row justify-content-center">
+  <div class="row justify-content-center">
+    <p class="col">Hi @Model.CustomerName, order new pizza below, or click <a href="/orderhistory">here</a> to view
+      order history</p>
+  </div>
+  <hr>
+
+  <div class="row justify-content-center">
+    <form action="/order/check?customername=@Model.CustomerName" method="POST" class="col">
+      @Html.AntiForgeryToken()
+
+      <fieldset>
+        <legend>Type of Pizza</legend>
+        @Html.ValidationMessageFor(m => m.SelectedPizzaType, null, new { @class = "error-message" })
+        <br>
+        @foreach (var type in Model.PizzaTypes)
+        {
+          <input asp-for="SelectedPizzaType" type="radio" value=@type.Name required>
+          <label>@type.Name</label>
+          <br>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Store</legend>
+        @Html.ValidationMessageFor(m => m.SelectedStore, null, new { @class = "error-message" })
+        <br>
+        @foreach (var store in Model.Stores)
+        {
+          <input asp-for="SelectedStore" type="radio" value=@store.Name required>
+          <label>@store.Name</label>
+          <br>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Crust</legend>
+        @Html.ValidationMessageFor(m => m.SelectedCrust, null, new { @class = "error-message" })
+        <br>
+        @foreach (var crust in Model.Crusts)
+        {
+          <input asp-for="SelectedCrust" type="radio" value=@crust.Name required>
+          <label>@crust.Name ($@crust.Price.ToString("F"))</label>
+          <br>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Size</legend>
+        @Html.ValidationMessageFor(m => m.SelectedSize, null, new { @class = "error-message" })
+        <br>
+        @foreach (var size in Model.Sizes)
+        {
+          <input asp-for="SelectedSize" type="radio" value=@size.Name required>
+          <label>@size.Name ($@size.Price.ToString("F"))</label>
+          <br>
+        }
+      </fieldset>
+
+      <fieldset>
+        <legend>Toppings</legend>
+        @Html.ValidationMessageFor(m => m.SelectedToppings, null, new { @class = "error-message" })
+        <br>
+        @foreach (var topping in Model.Toppings)
+        {
+          <input name="SelectedToppings" type="checkbox" value=@topping.Name>
+          <label>@topping.Name ($@topping.Price.ToString("F"))</label>
+          <br>
+        }
+      </fieldset>
+
+      <input type="submit" value="Place Order" id="place-order">
+    </form>
+  </div>
+
+</section>
+
+<script>
+  var form = document.forms[0]
+
+  form.addEventListener('click', e => {
+    if (e.target.value == 'Meat Pizza') {
+      processMeatPizza()
+    }
+    if (e.target.value == 'Veggie Pizza') {
+      processVeggiePizza()
+    }
+    if (e.target.value == 'Custom Pizza') {
+      processCustomPizza()
+    }
+  })
+
+  function processMeatPizza() {
+    form.querySelector('[name=SelectedToppings][value=Sausage]').checked = true
+    form.querySelector('[name=SelectedToppings][value=Pepperoni]').checked = true
+    form.querySelector('[name=SelectedToppings][value=Mushrooms]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Onions]').checked = false
+    disableToppingCheckboxes()
+  }
+
+  function processVeggiePizza() {
+    form.querySelector('[name=SelectedToppings][value=Sausage]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Pepperoni]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Mushrooms]').checked = true
+    form.querySelector('[name=SelectedToppings][value=Onions]').checked = true
+    disableToppingCheckboxes()
+  }
+
+  function processCustomPizza() {
+    form.querySelector('[name=SelectedToppings][value=Sausage]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Pepperoni]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Mushrooms]').checked = false
+    form.querySelector('[name=SelectedToppings][value=Onions]').checked = false
+    enableToppingCheckboxes()
+  }
+
+  function disableToppingCheckboxes() {
+    form.querySelectorAll('[name=SelectedToppings]').forEach(topping => {
+      topping.onclick = e => {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    })
+  }
+
+  function enableToppingCheckboxes() {
+    form.querySelectorAll('[name=SelectedToppings]').forEach(topping => {
+      topping.onclick = null
+    })
+  }
+
+</script>
