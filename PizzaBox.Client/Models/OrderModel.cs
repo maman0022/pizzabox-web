@@ -9,6 +9,8 @@ namespace PizzaBox.Client.Models
 {
   public class OrderModel : IValidatableObject
   {
+    [Required]
+    [DataType(DataType.Text)]
     public string CustomerName { get; set; }
     public List<ACrust> Crusts { get; set; }
     public List<ASize> Sizes { get; set; }
