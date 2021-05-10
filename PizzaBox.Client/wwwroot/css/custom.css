@@ -1,4 +1,9 @@
-header {
+* {
+  font-size: medium;
+  text-align: left;
+}
+
+header * {
   background-color: maroon;
   color: #fff;
   text-align: center;
@@ -6,11 +11,6 @@ header {
 
 header h1 {
   padding-bottom: 0.3em;
-}
-
-* {
-  font-size: medium;
-  text-align: center;
 }
 
 .error-message {
@@ -24,4 +24,16 @@ legend {
 
 fieldset {
   border: gray, 2px, solid;
+}
+
+.order-property {
+  color: brown;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.underline {
+  text-decoration: underline;
 }

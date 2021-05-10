@@ -12,7 +12,7 @@
   <hr>
 
   <div class="row justify-content-center">
-    <form action="/order/check?customername=@Model.CustomerName" method="POST" class="col">
+    <form action="/order/add?customername=@Model.CustomerName" method="POST" class="col">
       @Html.AntiForgeryToken()
 
       <fieldset>
@@ -20,68 +20,115 @@
         @Html.ValidationMessageFor(m => m.SelectedPizzaType, null, new { @class = "error-message" })
         <br>
         @foreach (var type in Model.PizzaTypes)
-        {
+          {
           <input asp-for="SelectedPizzaType" type="radio" value=@type.Name required>
           <label>@type.Name</label>
           <br>
-        }
+          }
       </fieldset>
 
       <fieldset>
         <legend>Store</legend>
-        @Html.ValidationMessageFor(m => m.SelectedStore, null, new { @class = "error-message" })
+          @Html.ValidationMessageFor(m => m.SelectedStore, null, new { @class = "error-message" })
         <br>
-        @foreach (var store in Model.Stores)
-        {
-          <input asp-for="SelectedStore" type="radio" value=@store.Name required>
-          <label>@store.Name</label>
+          @if (ViewData["orders"] as List<OrderModel> != null && (ViewData["orders"] as List<OrderModel>).Count > 0)
+          {
+            var order = (ViewData["orders"] as List<OrderModel>)[0];
+          <input asp-for="SelectedStore" type="radio" value=@order.SelectedStore required checked>
+          <label>@order.SelectedStore</label>
           <br>
-        }
+          }
+          else
+          {
+            @foreach (var store in Model.Stores)
+            {
+            <input asp-for="SelectedStore" type="radio" value=@store.Name required>
+            <label>@store.Name</label>
+            <br>
+            }
+          }
+
       </fieldset>
 
       <fieldset>
         <legend>Crust</legend>
-        @Html.ValidationMessageFor(m => m.SelectedCrust, null, new { @class = "error-message" })
+          @Html.ValidationMessageFor(m => m.SelectedCrust, null, new { @class = "error-message" })
         <br>
-        @foreach (var crust in Model.Crusts)
-        {
+          @foreach (var crust in Model.Crusts)
+          {
           <input asp-for="SelectedCrust" type="radio" value=@crust.Name required>
           <label>@crust.Name ($@crust.Price.ToString("F"))</label>
           <br>
-        }
+          }
       </fieldset>
 
       <fieldset>
         <legend>Size</legend>
-        @Html.ValidationMessageFor(m => m.SelectedSize, null, new { @class = "error-message" })
+          @Html.ValidationMessageFor(m => m.SelectedSize, null, new { @class = "error-message" })
         <br>
-        @foreach (var size in Model.Sizes)
-        {
+          @foreach (var size in Model.Sizes)
+          {
           <input asp-for="SelectedSize" type="radio" value=@size.Name required>
           <label>@size.Name ($@size.Price.ToString("F"))</label>
           <br>
-        }
+          }
       </fieldset>
 
       <fieldset>
         <legend>Toppings</legend>
-        @Html.ValidationMessageFor(m => m.SelectedToppings, null, new { @class = "error-message" })
+          @Html.ValidationMessageFor(m => m.SelectedToppings, null, new { @class = "error-message" })
         <br>
-        @foreach (var topping in Model.Toppings)
-        {
+          @foreach (var topping in Model.Toppings)
+          {
           <input name="SelectedToppings" type="checkbox" value=@topping.Name>
           <label>@topping.Name ($@topping.Price.ToString("F"))</label>
           <br>
-        }
+          }
       </fieldset>
-
-      <input type="submit" value="Place Order" id="place-order">
+      <br>
+      <input type="submit" value="Place Order">
+      <br>
+      <br>
     </form>
-  </div>
-
+    <hr>
 </section>
 
+<section>
+  <h3 class="underline">Pizzas in current order</h3>
+  @if (ViewData["orders"] as List<OrderModel> == null || (ViewData["orders"] as List<OrderModel>).Count == 0)
+  {
+    <p>You don't have any pizzas yet.</p>
+  }
+  else
+  {
+    <ul>
+      @foreach (var order in (ViewData["orders"] as List<OrderModel>))
+      {
+        <li><span class="order-property">Store:</span> @order.SelectedStore</li>
+        <li><span class="order-property">Pizza Type:</span> @order.SelectedPizzaType</li>
+        <li><span class="order-property">Crust:</span> @order.SelectedCrust</li>
+        <li><span class="order-property">Size:</span> @order.SelectedSize</li>
+        <li><span class="order-property">Toppings:</span>
+          <ol>
+            @foreach (var topping in order.SelectedToppings)
+            {
+              <li>@topping</li>
+            }
+          </ol>
+        </li>
+        <br>
+      }
+    </ul>
+  }
+  <button onclick="location.href = '/order/check'" style="width: max-content;">Checkout</button>
+</section>
+
+
 <script>
+  document.querySelectorAll('input').forEach(input => {
+    input.checked = false;
+  })
+
   var form = document.forms[0]
 
   form.addEventListener('click', e => {

@@ -16,6 +16,7 @@ namespace PizzaBox.Client.Controllers
   {
     private readonly ILogger<OrderController> _logger;
     private readonly UnitOfWork _unitOfWork;
+    public static List<OrderModel> ListOfOrderModels { get; set; } = new List<OrderModel>();
     public OrderController(ILogger<OrderController> logger, UnitOfWork unitOfWork)
     {
       _logger = logger;
@@ -30,50 +31,35 @@ namespace PizzaBox.Client.Controllers
       {
         return Redirect("/");
       }
+      ListOfOrderModels.Clear();
       var orderModel = new OrderModel();
       orderModel.CustomerName = customerName.Item2;
       orderModel.Load(_unitOfWork);
       return View("Order", orderModel);
     }
 
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public object Check(OrderModel orderModel)
+    [HttpGet]
+    public IActionResult Check()
     {
-      var orders = ViewData["orders"] as List<OrderModel>;
-
-      if (orders == null || orders.Count == 0)
+      if (ListOfOrderModels.Count == 0)
       {
         return View("Order");
       }
-      ProcessOrders(orders);
+      ProcessOrders(ListOfOrderModels);
       return Redirect("/checkout");
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Add(OrderModel orderModel)
     {
       if (ModelState.IsValid)
       {
-        if (ViewData["orders"] == null)
-        {
-          var orders = new List<OrderModel>();
-          orders.Add(orderModel);
-          ViewData["orders"] = orders;
-        }
-        else
-        {
-          var orders = ViewData["orders"] as List<OrderModel>;
-          orders.Add(orderModel);
-          ViewData["orders"] = orders;
-        }
-
-        var newOrderModel = new OrderModel();
-        newOrderModel.CustomerName = orderModel.CustomerName;
-        newOrderModel.Load(_unitOfWork);
-        return View("Order", orderModel);
+        ListOfOrderModels.Add(orderModel);
+        ViewData["orders"] = ListOfOrderModels;
       }
-      return View("Order");
+      orderModel.Load(_unitOfWork);
+      return View("Order", orderModel);
     }
 
     private (bool, string) CustomerNamePresent(HttpRequest request)
