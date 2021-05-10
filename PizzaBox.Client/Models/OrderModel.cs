@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using PizzaBox.Storing;
 using PizzaBox.Domain.Abstracts;
 using System.Linq;
+using PizzaBox.Domain.Models;
 
 namespace PizzaBox.Client.Models
 {
   public class OrderModel : IValidatableObject
   {
+    public Order CompleteOrder { get; set; }
+
     [Required]
     [DataType(DataType.Text)]
     public string CustomerName { get; set; }

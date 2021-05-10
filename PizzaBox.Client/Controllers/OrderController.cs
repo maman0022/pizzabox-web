@@ -45,8 +45,9 @@ namespace PizzaBox.Client.Controllers
       {
         return View("Order");
       }
-      ProcessOrders(ListOfOrderModels);
-      return Redirect("/checkout");
+      var orderModel = new OrderModel();
+      orderModel.CompleteOrder = ProcessOrders(ListOfOrderModels);
+      return View("Checkout", orderModel);
     }
 
     [HttpPost]
@@ -72,7 +73,7 @@ namespace PizzaBox.Client.Controllers
       return (true, query[0]);
     }
 
-    private void ProcessOrders(List<OrderModel> orders)
+    private Order ProcessOrders(List<OrderModel> orders)
     {
       var completeOrder = new Order();
       completeOrder.Pizzas = new List<Pizza>();
@@ -98,6 +99,7 @@ namespace PizzaBox.Client.Controllers
 
       _unitOfWork.Orders.Insert(completeOrder);
       _unitOfWork.Save();
+      return completeOrder;
     }
   }
 }
