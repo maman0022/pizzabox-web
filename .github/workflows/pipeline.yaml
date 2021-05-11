@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: dotnet tool install -g dotnet-sonarscanner
+      - run: dotnet tool install --global dotnet-sonarscanner --version 5.2.1
       - run: dotnet sonarscanner begin -k:'pizzabox-web' -o:'maman0022' -d:sonar.login=$SONAR_TOKEN -d:sonar.host.url='https://sonarcloud.io'
       - run: dotnet build
       - run: dotnet sonarscanner end -d:sonar.login=$SONAR_TOKEN
