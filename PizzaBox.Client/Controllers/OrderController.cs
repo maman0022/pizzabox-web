@@ -14,12 +14,10 @@ namespace PizzaBox.Client.Controllers
 {
   public class OrderController : Controller
   {
-    private readonly ILogger<OrderController> _logger;
     private readonly UnitOfWork _unitOfWork;
     public static List<OrderModel> ListOfOrderModels { get; set; } = new List<OrderModel>();
-    public OrderController(ILogger<OrderController> logger, UnitOfWork unitOfWork)
+    public OrderController(UnitOfWork unitOfWork)
     {
-      _logger = logger;
       _unitOfWork = unitOfWork;
     }
 

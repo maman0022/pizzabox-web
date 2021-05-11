@@ -11,12 +11,6 @@ namespace PizzaBox.Client.Controllers
 {
   public class NotFoundController : Controller
   {
-    private readonly ILogger<NotFoundController> _logger;
-
-    public NotFoundController(ILogger<NotFoundController> logger)
-    {
-      _logger = logger;
-    }
     [HttpGet]
     public IActionResult Index()
     {

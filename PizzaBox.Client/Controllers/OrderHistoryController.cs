@@ -8,12 +8,9 @@ namespace PizzaBox.Client.Controllers
 {
   public class OrderHistoryController : Controller
   {
-    private readonly ILogger<OrderHistoryController> _logger;
     private readonly UnitOfWork _unitOfWork;
-
-    public OrderHistoryController(ILogger<OrderHistoryController> logger, UnitOfWork unitOfWork)
+    public OrderHistoryController(UnitOfWork unitOfWork)
     {
-      _logger = logger;
       _unitOfWork = unitOfWork;
     }
     [HttpGet]

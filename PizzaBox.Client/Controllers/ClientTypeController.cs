@@ -12,12 +12,6 @@ namespace PizzaBox.Client.Controllers
 {
   public class ClientTypeController : Controller
   {
-    private readonly ILogger<ClientTypeController> _logger;
-
-    public ClientTypeController(ILogger<ClientTypeController> logger)
-    {
-      _logger = logger;
-    }
     [HttpGet]
     public IActionResult Index()
     {
