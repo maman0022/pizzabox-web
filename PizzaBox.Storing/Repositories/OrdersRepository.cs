@@ -47,7 +47,7 @@ namespace PizzaBox.Storing.Repositories
         .Include(o => o.Pizzas)
         .ThenInclude(p => p.Type);
 
-      return orders.Where(filter).ToList();
+      return orders.Where(filter);
     }
 
     public Order Update()
