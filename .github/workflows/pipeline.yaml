@@ -41,7 +41,7 @@ jobs:
       - run: docker push maman0022/pizzabox-web
       - run: docker logout
 
-  build:
+  deploy:
     env:
       EMAIL: ${{ secrets.EMAIL }}
       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
