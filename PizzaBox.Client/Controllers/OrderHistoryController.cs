@@ -28,7 +28,7 @@ namespace PizzaBox.Client.Controllers
 
       return View("OrderHistory", orderHistoryModel);
     }
-    private (bool, string) CustomerNamePresent(HttpRequest request)
+    private static (bool, string) CustomerNamePresent(HttpRequest request)
     {
       var query = request.Query["customername"];
       if (query.Count == 0 || query[0].Trim() == "")

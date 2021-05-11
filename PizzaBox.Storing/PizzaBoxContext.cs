@@ -14,7 +14,6 @@ namespace PizzaBox.Storing
 {
   public class PizzaBoxContext : DbContext
   {
-    private readonly IConfiguration _configuration;
     public DbSet<AStore> Stores { get; set; }
     public DbSet<APizzaType> PizzaTypes { get; set; }
     public DbSet<ACrust> Crusts { get; set; }
@@ -26,68 +25,68 @@ namespace PizzaBox.Storing
 
     public PizzaBoxContext(DbContextOptions options) : base(options) { }
 
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      builder.Entity<AStore>().HasKey(e => e.EntityId);
-      builder.Entity<ChicagoStore>().HasBaseType<AStore>();
-      builder.Entity<NewYorkStore>().HasBaseType<AStore>();
+      modelBuilder.Entity<AStore>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<ChicagoStore>().HasBaseType<AStore>();
+      modelBuilder.Entity<NewYorkStore>().HasBaseType<AStore>();
 
-      builder.Entity<APizzaType>().HasKey(e => e.EntityId);
-      builder.Entity<CustomPizza>().HasBaseType<APizzaType>();
-      builder.Entity<MeatPizza>().HasBaseType<APizzaType>();
-      builder.Entity<VeggiePizza>().HasBaseType<APizzaType>();
+      modelBuilder.Entity<APizzaType>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<CustomPizza>().HasBaseType<APizzaType>();
+      modelBuilder.Entity<MeatPizza>().HasBaseType<APizzaType>();
+      modelBuilder.Entity<VeggiePizza>().HasBaseType<APizzaType>();
 
-      builder.Entity<ACrust>().HasKey(e => e.EntityId);
-      builder.Entity<Thin>().HasBaseType<ACrust>();
-      builder.Entity<Pan>().HasBaseType<ACrust>();
-      builder.Entity<Stuffed>().HasBaseType<ACrust>();
+      modelBuilder.Entity<ACrust>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Thin>().HasBaseType<ACrust>();
+      modelBuilder.Entity<Pan>().HasBaseType<ACrust>();
+      modelBuilder.Entity<Stuffed>().HasBaseType<ACrust>();
 
-      builder.Entity<ASize>().HasKey(e => e.EntityId);
-      builder.Entity<Small>().HasBaseType<ASize>();
-      builder.Entity<Medium>().HasBaseType<ASize>();
-      builder.Entity<Large>().HasBaseType<ASize>();
+      modelBuilder.Entity<ASize>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Small>().HasBaseType<ASize>();
+      modelBuilder.Entity<Medium>().HasBaseType<ASize>();
+      modelBuilder.Entity<Large>().HasBaseType<ASize>();
 
-      builder.Entity<ATopping>().HasKey(e => e.EntityId);
-      builder.Entity<Onions>().HasBaseType<ATopping>();
-      builder.Entity<Mushrooms>().HasBaseType<ATopping>();
-      builder.Entity<Pepperoni>().HasBaseType<ATopping>();
-      builder.Entity<Sausage>().HasBaseType<ATopping>();
+      modelBuilder.Entity<ATopping>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Onions>().HasBaseType<ATopping>();
+      modelBuilder.Entity<Mushrooms>().HasBaseType<ATopping>();
+      modelBuilder.Entity<Pepperoni>().HasBaseType<ATopping>();
+      modelBuilder.Entity<Sausage>().HasBaseType<ATopping>();
 
-      builder.Entity<Customer>().HasKey(e => e.EntityId);
-      builder.Entity<Customer>().Property(e => e.Name);
+      modelBuilder.Entity<Customer>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Customer>().Property(e => e.Name);
 
-      builder.Entity<Order>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Order>().HasKey(e => e.EntityId);
 
-      builder.Entity<Pizza>().HasKey(e => e.EntityId);
+      modelBuilder.Entity<Pizza>().HasKey(e => e.EntityId);
 
       //seeding
 
-      builder.Entity<ChicagoStore>().HasData(new ChicagoStore[]
+      modelBuilder.Entity<ChicagoStore>().HasData(new ChicagoStore[]
       {
         new ChicagoStore() { EntityId = 1, Name = "1234 Main Street, Chicago, IL" }
       });
 
-      builder.Entity<NewYorkStore>().HasData(new NewYorkStore[]
+      modelBuilder.Entity<NewYorkStore>().HasData(new NewYorkStore[]
       {
         new NewYorkStore() { EntityId = 2, Name = "801 128th Street, New York City, NY" }
       });
 
-      builder.Entity<Small>().HasData(new Small() { EntityId = 1 });
-      builder.Entity<Medium>().HasData(new Medium() { EntityId = 2 });
-      builder.Entity<Large>().HasData(new Large() { EntityId = 3 });
+      modelBuilder.Entity<Small>().HasData(new Small() { EntityId = 1 });
+      modelBuilder.Entity<Medium>().HasData(new Medium() { EntityId = 2 });
+      modelBuilder.Entity<Large>().HasData(new Large() { EntityId = 3 });
 
-      builder.Entity<Thin>().HasData(new Thin() { EntityId = 1 });
-      builder.Entity<Pan>().HasData(new Pan() { EntityId = 2 });
-      builder.Entity<Stuffed>().HasData(new Stuffed() { EntityId = 3 });
+      modelBuilder.Entity<Thin>().HasData(new Thin() { EntityId = 1 });
+      modelBuilder.Entity<Pan>().HasData(new Pan() { EntityId = 2 });
+      modelBuilder.Entity<Stuffed>().HasData(new Stuffed() { EntityId = 3 });
 
-      builder.Entity<Onions>().HasData(new Onions() { EntityId = 1 });
-      builder.Entity<Mushrooms>().HasData(new Mushrooms() { EntityId = 2 });
-      builder.Entity<Pepperoni>().HasData(new Pepperoni() { EntityId = 3 });
-      builder.Entity<Sausage>().HasData(new Sausage() { EntityId = 4 });
+      modelBuilder.Entity<Onions>().HasData(new Onions() { EntityId = 1 });
+      modelBuilder.Entity<Mushrooms>().HasData(new Mushrooms() { EntityId = 2 });
+      modelBuilder.Entity<Pepperoni>().HasData(new Pepperoni() { EntityId = 3 });
+      modelBuilder.Entity<Sausage>().HasData(new Sausage() { EntityId = 4 });
 
-      builder.Entity<MeatPizza>().HasData(new MeatPizza() { EntityId = 1, Name = "Meat Pizza" });
-      builder.Entity<VeggiePizza>().HasData(new VeggiePizza() { EntityId = 2, Name = "Veggie Pizza" });
-      builder.Entity<CustomPizza>().HasData(new CustomPizza() { EntityId = 3, Name = "Custom Pizza" });
+      modelBuilder.Entity<MeatPizza>().HasData(new MeatPizza() { EntityId = 1, Name = "Meat Pizza" });
+      modelBuilder.Entity<VeggiePizza>().HasData(new VeggiePizza() { EntityId = 2, Name = "Veggie Pizza" });
+      modelBuilder.Entity<CustomPizza>().HasData(new CustomPizza() { EntityId = 3, Name = "Custom Pizza" });
     }
   }
 }
