@@ -1,0 +1,42 @@
+@{
+  ViewData["Title"] = "Order History";
+}
+
+@model PizzaBox.Client.Models.OrderHistoryModel
+
+<section class="container-fluid row justify-content-center">
+  <p>@Model.CustomerName, your order history is as follows,</p>
+  <hr>
+  @if (Model.Orders == null || Model.Orders.Count == 0)
+  {
+    <p>You have no orders yet.</p>
+  }
+  else
+  {
+    @foreach (var order in Model.Orders)
+    {
+      <p><span class="order-property">Store: </span>@order.Store</p>
+      <p><span class="order-property">Order Time: </span>@order.orderTime</p>
+      <p><span class="order-property">Grand Total: </span>$@order.TotalCost</p>
+      @foreach (var pizza in order.Pizzas)
+      {
+        <ul>
+          <li><span class="order-property">Pizza Type: </span>@pizza.Type</li>
+          <li><span class="order-property">Pizza Size: </span>@pizza.Size</li>
+          <li><span class="order-property">Pizza Crust: </span>@pizza.Crust</li>
+          <li><span class="order-property">Toppings:</span>
+            <ol>
+              @foreach (var topping in pizza.Toppings)
+              {
+                <li>@topping.Name</li>
+              }
+            </ol>
+          </li>
+          <li><span class="order-property">Pizza Total: </span>$@pizza.TotalCost.ToString("F")</li>
+        </ul>
+        <br>
+      }
+      <hr>
+    }
+  }
+</section>

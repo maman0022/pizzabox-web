@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using PizzaBox.Domain.Interfaces;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using PizzaBox.Domain.Models;
+using System.Data.SqlTypes;
 
 namespace PizzaBox.Storing.Repositories
 {
@@ -31,7 +34,20 @@ namespace PizzaBox.Storing.Repositories
 
     public IEnumerable<Order> Select(Func<Order, bool> filter)
     {
-      throw new System.NotImplementedException();
+      var orders =
+       _context.Orders
+        .Include(o => o.Customer)
+        .Include(o => o.Store)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.Toppings)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.Size)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.Crust)
+        .Include(o => o.Pizzas)
+        .ThenInclude(p => p.Type);
+
+      return orders.Where(filter).ToList();
     }
 
     public Order Update()

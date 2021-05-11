@@ -10,7 +10,6 @@ namespace PizzaBox.Domain.Models
     public Customer Customer { get; set; }
     public AStore Store { get; set; }
     public List<Pizza> Pizzas { get; set; }
-    private List<ATopping> _toppings { get; set; }
     public DateTime orderTime { get; set; }
     public decimal TotalCost
     {
@@ -23,14 +22,6 @@ namespace PizzaBox.Domain.Models
         }
         return orderTotal;
       }
-    }
-    public Order()
-    {
-
-    }
-    public Order(List<ATopping> Toppings)
-    {
-      _toppings = Toppings;
     }
   }
 }
