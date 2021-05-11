@@ -24,16 +24,6 @@ namespace PizzaBox.Storing
     public DbSet<Order> Orders { get; set; }
     public DbSet<Customer> Customers { get; set; }
 
-    /*     public PizzaBoxContext()
-        {
-          _configuration = new ConfigurationBuilder().AddUserSecrets<PizzaBoxContext>().Build();
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {
-          builder.UseNpgsql(_configuration["mssql"]);
-          builder.EnableSensitiveDataLogging(true);
-        } */
-
     public PizzaBoxContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
