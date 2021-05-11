@@ -1,0 +1,57 @@
+@{
+  ViewData["Title"] = "View Orders";
+}
+
+@model PizzaBox.Client.Models.ManagementModel
+
+<section class="container-fluid row justify-content-center">
+  <p>Please select a store</p>
+  <br>
+  <form action="/management/vieworders" method="POST">
+    @Html.AntiForgeryToken()
+    @foreach (var store in Model.Stores)
+    {
+      <label>@store.Name</label>
+      <input type="radio" value=@store.Name asp-for="SelectedStore" required>
+      <br>
+    }
+    <input type="submit" value="Submit">
+  </form>
+  <hr>
+  @if (Model.Orders == null)
+  {
+    <p>No store selected</p>
+  }
+  else if (Model.Orders != null && Model.Orders.Count == 0)
+  {
+    <p>This store has no orders</p>
+  }
+  else
+  {
+    @foreach (var order in Model.Orders)
+    {
+      <p><span class="order-property">Customer: </span>@order.Customer.Name</p>
+      <p><span class="order-property">Order Time: </span>@order.orderTime</p>
+      <p><span class="order-property">Grand Total: </span>$@order.TotalCost</p>
+      @foreach (var pizza in order.Pizzas)
+      {
+        <ul>
+          <li><span class="order-property">Pizza Type: </span>@pizza.Type</li>
+          <li><span class="order-property">Pizza Size: </span>@pizza.Size</li>
+          <li><span class="order-property">Pizza Crust: </span>@pizza.Crust</li>
+          <li><span class="order-property">Toppings:</span>
+            <ol>
+              @foreach (var topping in pizza.Toppings)
+              {
+                <li>@topping.Name</li>
+              }
+            </ol>
+          </li>
+          <li><span class="order-property">Pizza Total: </span>$@pizza.TotalCost.ToString("F")</li>
+        </ul>
+        <br>
+      }
+      <hr>
+    }
+  }
+</section>
