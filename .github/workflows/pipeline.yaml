@@ -41,6 +41,20 @@ jobs:
       - run: docker push maman0022/pizzabox-web
       - run: docker logout
 
+  build:
+    env:
+      EMAIL: ${{ secrets.EMAIL }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: $HEROKU_API_KEY
+          heroku_app_name: "pizzabox-web"
+          heroku_email: $EMAIL
+          usedocker: true
+
 name: ci-pipeline
 
 on: push

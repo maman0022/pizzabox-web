@@ -24,3 +24,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PizzaBox.Client.dll"]
+
+CMD dotnet run /app/publish/PizzaBox.Client.dll
