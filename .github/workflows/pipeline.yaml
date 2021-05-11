@@ -35,9 +35,9 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
       - run: docker image build -f Dockerfile -t pizzabox-web .
       - run: docker image tag pizzabox-web maman0022/pizzabox-web
-      - run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN 
       - run: docker push maman0022/pizzabox-web
       - run: docker logout
 
