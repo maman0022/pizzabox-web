@@ -25,4 +25,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "PizzaBox.Client.dll"]
 
-CMD ASPNETCORE_URLS=http://*:$PORT  dotnet PizzaBox.Client.dll
+CMD ASPNETCORE_URLS="http://*:$PORT ,https://*:$PORT"  dotnet PizzaBox.Client.dll
