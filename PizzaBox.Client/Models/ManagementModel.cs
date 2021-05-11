@@ -16,7 +16,7 @@ namespace PizzaBox.Client.Models
     public List<Order> Orders { get; set; }
     public void LoadStores(UnitOfWork unitOfWork)
     {
-      Stores = unitOfWork.Stores.Select(s => s.Name != null).ToList();
+      Stores = unitOfWork.Stores.Select(s => !string.IsNullOrWhiteSpace(s.Name)).ToList();
     }
     public void LoadOrders(UnitOfWork unitOfWork)
     {
